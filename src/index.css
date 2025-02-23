@@ -1,0 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=DotGothic16&display=swap");
+
+/* テーマカラー */
+:root {
+  font-family: "DotGothic16", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--color-font);
+  --color-primary: #fffdd1;
+  --color-secondary: #ffffff;
+  --color-accent: #c280b4;
+  --color-font: rgba(0, 0, 0, 0.87);
+  background-color: var(--color-primary);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+p {
+  font-size: 1.2rem;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 72px);
+  margin-top: 72px;
+}
+
+a {
+  color: var(--color-font);
+  text-decoration: none;
+}
