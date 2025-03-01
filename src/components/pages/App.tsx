@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Dialog, ThemeProvider, Input } from "reactro-ui-lib";
-import { signUpNewUser } from "../../lib/auth";
+import { signUpNewUser, tokenCheck } from "../../lib/auth";
+import type { User } from "@supabase/supabase-js";
 
 import "./App.css";
 import Header from "../feature/header";
@@ -18,6 +19,7 @@ function SignUpForm() {
       <br />
       <br />
       <Button
+        type="button"
         onClick={() => {
           signUpNewUser(email, password);
         }}
@@ -30,11 +32,24 @@ function SignUpForm() {
 
 function Home() {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      return;
+    }
+    tokenCheck(token).then((res) => {
+      if (res.error) {
+        return;
+      }
+      setUser(res.data.user);
+    });
+  }, []);
 
   return (
     <>
       <ThemeProvider theme="cinnamon">
-        <Header />
+        <Header user={user} />
         <main>
           <h2>初めに</h2>
           <p>

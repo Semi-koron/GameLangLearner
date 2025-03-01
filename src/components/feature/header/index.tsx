@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../lib/auth";
-import { Navbar, Button, Input, Dialog } from "reactro-ui-lib";
+import { Navbar, Button, Input, Dialog, Dropdown } from "reactro-ui-lib";
+import type { User } from "@supabase/supabase-js";
+
+interface HeaderProps {
+  user: User | null;
+}
 
 function LogInForm() {
   const [email, setEmail] = useState<string>("");
@@ -11,10 +16,7 @@ function LogInForm() {
 
   const handleLogIn = async () => {
     const { data, error } = await login(email, password);
-    if (error) {
-      alert(error);
-      return;
-    }
+    console.error(error);
     if (!data.session?.access_token) {
       alert("ログインに失敗しました");
       return;
@@ -34,12 +36,14 @@ function LogInForm() {
       <Input type="password" onChange={(e) => setPassword(e.target.value)} />
       <br />
       <br />
-      <Button onClick={handleLogIn}>ログイン</Button>
+      <Button type="button" onClick={handleLogIn}>
+        ログイン
+      </Button>
     </form>
   );
 }
 
-export default function Header() {
+export default function Header({ user }: HeaderProps) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   return (
     <>
@@ -47,14 +51,30 @@ export default function Header() {
         brand={<h1>GameLangLearner</h1>}
         items={
           <>
-            <Button
-              size="sm"
-              onClick={() => {
-                setIsDialogOpen(true);
-              }}
-            >
-              Login
-            </Button>
+            {user ? (
+              <>
+                <Dropdown text={user.email}>
+                  <Button
+                    onClick={() => {
+                      sessionStorage.removeItem("token");
+                      window.location.reload();
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </Dropdown>
+              </>
+            ) : (
+              <>
+                <Button
+                  onClick={() => {
+                    setIsDialogOpen(true);
+                  }}
+                >
+                  Login
+                </Button>
+              </>
+            )}
           </>
         }
       />
