@@ -14,7 +14,7 @@ export async function withAuth(req: Request) {
 
   const token = authHeader.replace('Bearer ', '');
   const { data, error } = await supabaseClient.auth.getUser(token);
-
+  console.log(data);
   if (error) {
     return { user: null, error: 'Unauthorized: Invalid token' };
   }

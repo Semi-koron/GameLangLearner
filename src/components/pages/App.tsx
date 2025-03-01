@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { Button, Dialog, ThemeProvider, Input } from "reactro-ui-lib";
-import { signUpNewUser, tokenCheck } from "../../lib/auth";
+import { useNavigate } from "react-router-dom";
+import { tokenCheck } from "../../lib/auth";
+import { signUp } from "../../lib/supabase";
 import type { User } from "@supabase/supabase-js";
-
 import "./App.css";
 import Header from "../feature/header";
 
 function SignUpForm() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
+  const navigate = useNavigate();
 
   return (
     <div className="modal-content">
@@ -16,12 +19,22 @@ function SignUpForm() {
       <Input type="email" onChange={(e) => setEmail(e.target.value)} />
       <p>password</p>
       <Input type="password" onChange={(e) => setPassword(e.target.value)} />
+      <p>userName</p>
+      <Input type="text" onChange={(e) => setUserName(e.target.value)} />
       <br />
       <br />
       <Button
         type="button"
         onClick={() => {
-          signUpNewUser(email, password);
+          signUp(email, password, userName).then((res) => {
+            if (res.error) {
+              alert("登録に失敗しました");
+              return;
+            }
+            const token = res.token;
+            sessionStorage.setItem("token", token);
+            navigate("/dashboard");
+          });
         }}
       >
         登録
