@@ -24,3 +24,19 @@ export async function signUp(email: string, password: string, userName: string) 
 
     return data;
 }
+
+export async function fetchUser(token: string) {
+    if (!token) {
+        return null;
+    }
+
+    const data = await fetch(baseUrl + "fetch-userdata", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    }).then((res) => res.json());
+
+    return data;
+}

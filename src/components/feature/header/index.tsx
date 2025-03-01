@@ -1,11 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../lib/auth";
-import { Navbar, Button, Input, Dialog, Dropdown } from "reactro-ui-lib";
+import {
+  Navbar,
+  Button,
+  Input,
+  Dialog,
+  Dropdown,
+  Circle,
+} from "reactro-ui-lib";
 import type { User } from "@supabase/supabase-js";
+import "./style.css";
 
 interface HeaderProps {
   user: User | null;
+  avatarUrl?: string;
+  userName?: string;
 }
 
 function LogInForm() {
@@ -43,7 +53,7 @@ function LogInForm() {
   );
 }
 
-export default function Header({ user }: HeaderProps) {
+export default function Header({ user, userName, avatarUrl }: HeaderProps) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   return (
     <>
@@ -53,7 +63,7 @@ export default function Header({ user }: HeaderProps) {
           <>
             {user ? (
               <>
-                <Dropdown text={user.email}>
+                <Dropdown text={userName}>
                   <Button
                     onClick={() => {
                       sessionStorage.removeItem("token");
@@ -63,6 +73,17 @@ export default function Header({ user }: HeaderProps) {
                     Logout
                   </Button>
                 </Dropdown>
+                <Circle
+                  width="40px"
+                  children={
+                    <img
+                      src={avatarUrl}
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                  }
+                />
               </>
             ) : (
               <>

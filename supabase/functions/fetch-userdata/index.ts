@@ -4,19 +4,47 @@
 
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+import { corsHeaders } from '../_shared/cors.ts'
+import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { withAuth } from '../_shared/authMiddleware.ts'; // ミドルウェアのインポート
 
-console.log("Hello from Functions!")
+const supabaseClient = createClient(
+  Deno.env.get('SUPABASE_URL') ?? '',
+  Deno.env.get('SERVICE_ROLE_KEY') ?? '' // サービスロールキーを使う
+);
+console.log("fetch userdata")
 
 Deno.serve(async (req) => {
-  const { name } = await req.json()
-  const data = {
-    message: `Hello ${name}!`,
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders })
   }
 
-  return new Response(
-    JSON.stringify(data),
-    { headers: { "Content-Type": "application/json" } },
-  )
+  const user = await withAuth(req);
+  if (!user) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  const userId = user.user.id;
+  const { data, error: fetchError } = await supabaseClient
+    .from("user_table")
+    .select("user_id, user_name, avatar_url")
+    .eq("user_id", userId)
+    .single();
+
+  if (fetchError) {
+    return new Response(JSON.stringify({ error: fetchError.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  return new Response(JSON.stringify({ data }), {
+    status: 200,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
 })
 
 /* To invoke locally:
