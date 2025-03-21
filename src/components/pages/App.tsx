@@ -5,7 +5,7 @@ import { tokenCheck } from "../../lib/auth";
 import { signUp } from "../../lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import "./App.css";
-import Header from "../feature/header";
+import Header from "../feature/Header";
 
 function SignUpForm() {
   const [email, setEmail] = useState<string>("");

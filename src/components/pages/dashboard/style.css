@@ -1,0 +1,10 @@
+.main-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  padding: 24px;
+}
+
+.box-wrapper {
+  padding: 24px;
+}
