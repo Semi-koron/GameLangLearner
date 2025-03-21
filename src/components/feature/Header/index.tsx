@@ -63,27 +63,29 @@ export default function Header({ user, userName, avatarUrl }: HeaderProps) {
           <>
             {user ? (
               <>
-                <Dropdown text={userName}>
-                  <Button
-                    onClick={() => {
-                      sessionStorage.removeItem("token");
-                      window.location.reload();
-                    }}
-                  >
-                    Logout
-                  </Button>
-                </Dropdown>
-                <Circle
-                  width="40px"
-                  children={
-                    <img
-                      src={avatarUrl}
-                      style={{
-                        width: "100%",
+                <div className="header-wrapper">
+                  <Dropdown text={userName}>
+                    <Button
+                      onClick={() => {
+                        sessionStorage.removeItem("token");
+                        window.location.reload();
                       }}
-                    />
-                  }
-                />
+                    >
+                      Logout
+                    </Button>
+                  </Dropdown>
+                  <Circle
+                    width="40px"
+                    children={
+                      <img
+                        src={avatarUrl}
+                        style={{
+                          width: "100%",
+                        }}
+                      />
+                    }
+                  />
+                </div>
               </>
             ) : (
               <>
