@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
 import { tokenCheck } from "../../../lib/auth";
 import { useNavigate } from "react-router-dom";
-import { Box, ThemeProvider } from "reactro-ui-lib";
+import { Box, ThemeProvider, Button } from "reactro-ui-lib";
 import { User } from "@supabase/supabase-js";
 import { fetchUser } from "../../../lib/supabase";
-import Header from "../../feature/Header";
-
-import "./style.css";
 import PhraseChecker from "../../feature/PhraseChecker";
 import { PhraseData } from "../../../models/phrase";
+import Header from "../../feature/Header";
 import PasteBox from "../../feature/PasteBox";
+
+import "./style.css";
 
 function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [userName, setUserName] = useState<string>("");
-  const [imgUrl, setImgUrl] = useState<string>("");
+  const [avatarImgUrl, setAvatarImgUrl] = useState<string>("");
+
+  const [pasteImgUrl, setPasteImgUrl] = useState<string>("");
   const navigate = useNavigate();
 
   const test: PhraseData[] = [
@@ -47,14 +49,14 @@ function DashboardPage() {
         return;
       }
       setUserName(data.data?.user_name);
-      setImgUrl(data.data?.avatar_url);
+      setAvatarImgUrl(data.data?.avatar_url);
     };
   }, []);
 
   return (
     <>
       <ThemeProvider theme="cinnamon">
-        <Header user={user} userName={userName} avatarUrl={imgUrl} />
+        <Header user={user} userName={userName} avatarUrl={avatarImgUrl} />
         <main>
           <div className="main-wrapper">
             <Box width="100%">
@@ -86,7 +88,9 @@ function DashboardPage() {
               <div className="box-wrapper">
                 <h1>Dashboard</h1>
                 <p>ようこそ、{userName}さん</p>
-                <PasteBox />
+                <PasteBox setImgUrl={setPasteImgUrl} imgUrl={pasteImgUrl} />
+                <br />
+                {pasteImgUrl !== "" && <Button>翻訳する</Button>}
               </div>
             </Box>
           </div>

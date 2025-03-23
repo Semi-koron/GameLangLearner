@@ -1,12 +1,12 @@
-"use client";
-import { useState } from "react";
-import { Box } from "reactro-ui-lib";
+import { Box, Button } from "reactro-ui-lib";
 import "./style.css";
-import { Button } from "pixel-retroui";
 
-export default function PasteBox() {
-  const [imgUrl, setImgUrl] = useState<string>("");
+type PasteBoxProps = {
+  setImgUrl: (url: string) => void;
+  imgUrl: string;
+};
 
+export default function PasteBox({ setImgUrl, imgUrl }: PasteBoxProps) {
   const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
     const items = e.clipboardData?.items;
     if (!items) {
@@ -31,7 +31,7 @@ export default function PasteBox() {
 
   return (
     <>
-      <div>
+      <div className="paste-box-wrapper">
         {imgUrl === "" ? (
           <Box>
             <div className="paste-box" onPaste={handlePaste}>
@@ -46,7 +46,9 @@ export default function PasteBox() {
                 src={imgUrl}
                 className="paste-box-image"
               />
-              <Button onClick={() => setImgUrl("")}>取り消し</Button>
+              <Button variant="primary" onClick={() => setImgUrl("")}>
+                取り消し
+              </Button>
             </div>
           </Box>
         )}

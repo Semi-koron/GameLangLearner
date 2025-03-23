@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import { User } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
@@ -39,4 +38,10 @@ export async function fetchUser(token: string) {
     }).then((res) => res.json());
 
     return data;
+}
+
+export async function uploadImage(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
 }
