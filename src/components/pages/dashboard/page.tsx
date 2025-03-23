@@ -9,6 +9,7 @@ import Header from "../../feature/Header";
 import "./style.css";
 import PhraseChecker from "../../feature/PhraseChecker";
 import { PhraseData } from "../../../models/phrase";
+import PasteBox from "../../feature/PasteBox";
 
 function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -85,6 +86,7 @@ function DashboardPage() {
               <div className="box-wrapper">
                 <h1>Dashboard</h1>
                 <p>ようこそ、{userName}さん</p>
+                <PasteBox />
               </div>
             </Box>
           </div>
