@@ -2,6 +2,13 @@ p {
   max-width: 500px;
 }
 
+.top-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
 .modal-overlay {
   position: fixed;
   width: 100%;

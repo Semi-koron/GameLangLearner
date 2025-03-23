@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Button, Dialog, ThemeProvider, Input } from "reactro-ui-lib";
 import { useNavigate } from "react-router-dom";
 import { tokenCheck } from "../../lib/auth";
-import { signUp } from "../../lib/supabase";
-import type { User } from "@supabase/supabase-js";
+import { signUp, fetchUser } from "../../lib/supabase";
+import { User } from "@supabase/supabase-js";
 import "./App.css";
 import Header from "../feature/Header";
 
@@ -46,6 +46,8 @@ function SignUpForm() {
 function Home() {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
+  const [userName, setUserName] = useState<string>("");
+  const [imgUrl, setImgUrl] = useState<string>("");
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (!token) {
@@ -56,14 +58,24 @@ function Home() {
         return;
       }
       setUser(res.data.user);
+      fetchUserData();
     });
+    const fetchUserData = async () => {
+      const data = await fetchUser(token);
+      if (data.error) {
+        console.error(data.error);
+        return;
+      }
+      setUserName(data.data?.user_name);
+      setImgUrl(data.data?.avatar_url);
+    };
   }, []);
 
   return (
     <>
       <ThemeProvider theme="cinnamon">
-        <Header user={user} />
-        <main>
+        <Header user={user} userName={userName} avatarUrl={imgUrl} />
+        <main className="top-wrapper">
           <h2>初めに</h2>
           <p>
             こちらのサイトは、ゲームを英語字幕で楽しみつつ、英語力を鍛えようという浅はかな考えのもと
