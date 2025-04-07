@@ -3,10 +3,15 @@ import "./style.css";
 
 type PasteBoxProps = {
   setImgUrl: (url: string) => void;
+  setUploadFile: (file: File | null) => void;
   imgUrl: string;
 };
 
-export default function PasteBox({ setImgUrl, imgUrl }: PasteBoxProps) {
+export default function PasteBox({
+  setImgUrl,
+  setUploadFile,
+  imgUrl,
+}: PasteBoxProps) {
   const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
     const items = e.clipboardData?.items;
     if (!items) {
@@ -25,6 +30,7 @@ export default function PasteBox({ setImgUrl, imgUrl }: PasteBoxProps) {
       }
 
       const imageUrl = URL.createObjectURL(file);
+      setUploadFile(file);
       setImgUrl(imageUrl);
     }
   };
@@ -46,7 +52,13 @@ export default function PasteBox({ setImgUrl, imgUrl }: PasteBoxProps) {
                 src={imgUrl}
                 className="paste-box-image"
               />
-              <Button variant="primary" onClick={() => setImgUrl("")}>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setImgUrl("");
+                  setUploadFile(null);
+                }}
+              >
                 取り消し
               </Button>
             </div>

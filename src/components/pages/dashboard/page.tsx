@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { tokenCheck } from "../../../lib/auth";
 import { useNavigate } from "react-router-dom";
 import { Box, ThemeProvider, Button } from "reactro-ui-lib";
 import { User } from "@supabase/supabase-js";
-import { fetchUser } from "../../../lib/supabase";
+import { fetchUser, textDetect } from "../../../lib/supabase";
 import PhraseChecker from "../../feature/PhraseChecker";
 import { PhraseData } from "../../../models/phrase";
 import Header from "../../feature/Header";
@@ -15,7 +15,7 @@ function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [userName, setUserName] = useState<string>("");
   const [avatarImgUrl, setAvatarImgUrl] = useState<string>("");
-
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [pasteImgUrl, setPasteImgUrl] = useState<string>("");
   const navigate = useNavigate();
 
@@ -53,6 +53,25 @@ function DashboardPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (uploadFile !== null) {
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+      textDetect(uploadFile, token)
+        .then((res) => {
+          if (res.error) {
+            console.error(res.error);
+            return;
+          }
+          console.log(res);
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [uploadFile]);
+
   return (
     <>
       <ThemeProvider theme="cinnamon">
@@ -88,9 +107,12 @@ function DashboardPage() {
               <div className="box-wrapper">
                 <h1>Dashboard</h1>
                 <p>ようこそ、{userName}さん</p>
-                <PasteBox setImgUrl={setPasteImgUrl} imgUrl={pasteImgUrl} />
+                <PasteBox
+                  setImgUrl={setPasteImgUrl}
+                  setUploadFile={setUploadFile}
+                  imgUrl={pasteImgUrl}
+                />
                 <br />
-                {pasteImgUrl !== "" && <Button>翻訳する</Button>}
               </div>
             </Box>
           </div>

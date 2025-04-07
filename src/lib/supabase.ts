@@ -40,8 +40,20 @@ export async function fetchUser(token: string) {
     return data;
 }
 
-export async function uploadImage(file: File) {
-    const formData = new FormData();
-    formData.append("file", file);
 
+export async function textDetect (file: File, token: string) {
+    const formData = new FormData();
+    formData.append("image", file);
+    const response = await fetch(baseUrl + "gemini-image-recognition", {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+        body: formData,
+    });
+    const data = await response.json();
+    if (response.ok) {
+        return data;
+    }
+    throw new Error(data.error || "Unknown error");
 }
